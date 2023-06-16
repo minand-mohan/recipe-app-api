@@ -9,13 +9,14 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
-TOKEN_URL =  reverse('user:token')
+TOKEN_URL = reverse('user:token')
 ME_URL = reverse('user:me')
 
 
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
+
 
 class PublicUserApiTests(TestCase):
     """Test the public features of the user API"""
@@ -78,14 +79,14 @@ class PublicUserApiTests(TestCase):
             'email': user_details['email'],
             'password': user_details['password'],
         }
-        res =self.client.post(TOKEN_URL, payload)
+        res = self.client.post(TOKEN_URL, payload)
 
         self.assertIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_bad_credentials(self):
         """Test returns error if creentials invalid"""
-        create_user(email='test@example.com',password='goodpass')
+        create_user(email='test@example.com', password='goodpass')
 
         payload = {'email': 'test@example.com', 'password': 'badpass'}
         res = self.client.post(TOKEN_URL, payload)
@@ -122,7 +123,7 @@ class PrivateUserApiTests(TestCase):
 
     def test_retrieve_profile_success(self):
         """Test retrieveing profile for logged in user."""
-        res =self.client.get(ME_URL)
+        res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, {
